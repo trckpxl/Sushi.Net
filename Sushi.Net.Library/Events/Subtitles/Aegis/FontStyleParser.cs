@@ -26,114 +26,139 @@ namespace Sushi.Net.Library.Events.Subtitles.Aegis
 
         public FontStyle CreateFontStyle(string format_line)
         {
-
             FontStyle style = new FontStyle(this);
-            for (int x = 0; x < fields.Count; x++)
-            {
-                string par=string.Empty;
-                if (x < fields.Count - 1)
-                {
-                    int idx = format_line.IndexOf(x == 0 ? ":" : ",");
-                    if (idx >= 0)
-                    {
-                        par = format_line.Substring(0, idx).Trim();
-                        format_line = format_line.Substring(idx + 1);
-                    }
-                }
-                else
-                {
-                    par = format_line;
-                    format_line = "";
-                }
-
-                switch (fields[x].ToUpperInvariant())
-                    {
-                        case "KIND":
-                        case "FORMAT":
-                            style.Kind = par;
-                            break;
-                        case "NAME":
-                            style.Name = par;
-                            break;
-                        case "FONTNAME":
-                            style.FontName = par;
-                            break;
-                        case "FONTSIZE":
-                            style.FontSize = float.Parse(par, NumberStyles.Any, CultureInfo.InvariantCulture);
-                            break;
-                        case "PRIMARYCOLOUR":
-                        case "PRIMARYCOLOR":
-                            style.PrimaryColor = par;
-                            break;
-                        case "SECONDARYCOLOUR":
-                        case "SECONDARYCOLOR":
-                            style.SecondaryColor = par;
-                            break;
-                        case "TERTIARYCOLOUR":
-                        case "TERTIARYCOLOR":
-                        case "OUTLINECOLOUR":
-                        case "OUTLINECOLOR":
-                            style.OutlineColor = par;
-                            break;
-                        case "BACKCOLOUR":
-                        case "BACKCOLOR":
-                            style.BackColor = par;
-                            break;
-                        case "BOLD":
-                            style.Bold = int.Parse(par) != 0;
-                            break;
-                        case "ITALIC":
-                            style.Italic = int.Parse(par) != 0;
-                            break;
-                        case "UNDERLINE":
-                            style.Underline = int.Parse(par) != 0;
-                            break;
-                        case "STRIKEOUT":
-                            style.Strikeout = int.Parse(par) != 0;
-                            break;
-                        case "BORDERSTYLE":
-                            style.BorderStyle = int.Parse(par);
-                            break;
-                        case "SCALEX":
-                            style.ScaleX = float.Parse(par, NumberStyles.Any, CultureInfo.InvariantCulture);
-                            break;
-                        case "SCALEY":
-                            style.ScaleY = float.Parse(par, NumberStyles.Any, CultureInfo.InvariantCulture);
-                            break;
-                        case "ANGLE":
-                            style.Angle = float.Parse(par, NumberStyles.Any, CultureInfo.InvariantCulture);
-                            break;
-                        case "OUTLINE":
-                            style.Outline = float.Parse(par, NumberStyles.Any, CultureInfo.InvariantCulture);
-                            break;
-                        case "SHADOW":
-                            style.Shadow = float.Parse(par, NumberStyles.Any, CultureInfo.InvariantCulture);
-                            break;
-                        case "ALIGNMENT":
-                            style.Alignment = int.Parse(par, NumberStyles.Any, CultureInfo.InvariantCulture);
-                            break;
-                        case "SPACING":
-                            style.Spacing= float.Parse(par, NumberStyles.Any, CultureInfo.InvariantCulture);
-                            break;
-                        case "MARGINL":
-                            style.MarginLeft= int.Parse(par, NumberStyles.Any, CultureInfo.InvariantCulture);
-                            break;
-                        case "MARGINR":
-                            style.MarginRight = int.Parse(par, NumberStyles.Any, CultureInfo.InvariantCulture);
-                            break;
-                        case "MARGINV":
-                            style.MarginVertical = int.Parse(par, NumberStyles.Any, CultureInfo.InvariantCulture);
-                            break;
-                        case "ALPHALEVEL":
-                            style.AlphaLevel = float.Parse(par, NumberStyles.Any, CultureInfo.InvariantCulture);
-                            break;
-                        case "ENCODING":
-                            style.Encoding = int.Parse(par, NumberStyles.Any, CultureInfo.InvariantCulture);
-                            break;
-
-                    }
             
+            // Split the line by commas and colons, but we need to handle the first separator differently
+            int firstSeparatorIdx = format_line.IndexOf(':');
+            if (firstSeparatorIdx < 0)
+                throw new FormatException("Invalid style line format: missing colon separator");
+            
+            // Create a list to hold all values
+            List<string> values = new List<string>();
+            
+            // Get the first value (Kind/Format)
+            string firstValue = format_line.Substring(0, firstSeparatorIdx).Trim();
+            values.Add(firstValue);
+            
+            // Process the rest of the line by splitting on commas
+            string restOfLine = format_line.Substring(firstSeparatorIdx + 1);
+            string[] remainingValues = restOfLine.Split(',');
+            
+            foreach (string val in remainingValues)
+            {
+                values.Add(val.Trim());
             }
+            
+            // Now process each value according to its field name
+            for (int x = 0; x < fields.Count && x < values.Count; x++)
+            {
+                string par = values[x];
+                
+                switch (fields[x].ToUpperInvariant())
+                {
+                    case "KIND":
+                    case "FORMAT":
+                        style.Kind = par;
+                        break;
+                    case "NAME":
+                        style.Name = par;
+                        break;
+                    case "FONTNAME":
+                        style.FontName = par;
+                        break;
+                    case "FONTSIZE":
+                        if (!string.IsNullOrEmpty(par))
+                            style.FontSize = float.Parse(par, NumberStyles.Any, CultureInfo.InvariantCulture);
+                        break;
+                    case "PRIMARYCOLOUR":
+                    case "PRIMARYCOLOR":
+                        style.PrimaryColor = par;
+                        break;
+                    case "SECONDARYCOLOUR":
+                    case "SECONDARYCOLOR":
+                        style.SecondaryColor = par;
+                        break;
+                    case "TERTIARYCOLOUR":
+                    case "TERTIARYCOLOR":
+                    case "OUTLINECOLOUR":
+                    case "OUTLINECOLOR":
+                        style.OutlineColor = par;
+                        break;
+                    case "BACKCOLOUR":
+                    case "BACKCOLOR":
+                        style.BackColor = par;
+                        break;
+                    case "BOLD":
+                        if (!string.IsNullOrEmpty(par))
+                            style.Bold = int.Parse(par) != 0;
+                        break;
+                    case "ITALIC":
+                        if (!string.IsNullOrEmpty(par))
+                            style.Italic = int.Parse(par) != 0;
+                        break;
+                    case "UNDERLINE":
+                        if (!string.IsNullOrEmpty(par))
+                            style.Underline = int.Parse(par) != 0;
+                        break;
+                    case "STRIKEOUT":
+                        if (!string.IsNullOrEmpty(par))
+                            style.Strikeout = int.Parse(par) != 0;
+                        break;
+                    case "BORDERSTYLE":
+                        if (!string.IsNullOrEmpty(par))
+                            style.BorderStyle = int.Parse(par);
+                        break;
+                    case "SCALEX":
+                        if (!string.IsNullOrEmpty(par))
+                            style.ScaleX = float.Parse(par, NumberStyles.Any, CultureInfo.InvariantCulture);
+                        break;
+                    case "SCALEY":
+                        if (!string.IsNullOrEmpty(par))
+                            style.ScaleY = float.Parse(par, NumberStyles.Any, CultureInfo.InvariantCulture);
+                        break;
+                    case "ANGLE":
+                        if (!string.IsNullOrEmpty(par))
+                            style.Angle = float.Parse(par, NumberStyles.Any, CultureInfo.InvariantCulture);
+                        break;
+                    case "OUTLINE":
+                        if (!string.IsNullOrEmpty(par))
+                            style.Outline = float.Parse(par, NumberStyles.Any, CultureInfo.InvariantCulture);
+                        break;
+                    case "SHADOW":
+                        if (!string.IsNullOrEmpty(par))
+                            style.Shadow = float.Parse(par, NumberStyles.Any, CultureInfo.InvariantCulture);
+                        break;
+                    case "ALIGNMENT":
+                        if (!string.IsNullOrEmpty(par))
+                            style.Alignment = int.Parse(par, NumberStyles.Any, CultureInfo.InvariantCulture);
+                        break;
+                    case "SPACING":
+                        if (!string.IsNullOrEmpty(par))
+                            style.Spacing = float.Parse(par, NumberStyles.Any, CultureInfo.InvariantCulture);
+                        break;
+                    case "MARGINL":
+                        if (!string.IsNullOrEmpty(par))
+                            style.MarginLeft = int.Parse(par, NumberStyles.Any, CultureInfo.InvariantCulture);
+                        break;
+                    case "MARGINR":
+                        if (!string.IsNullOrEmpty(par))
+                            style.MarginRight = int.Parse(par, NumberStyles.Any, CultureInfo.InvariantCulture);
+                        break;
+                    case "MARGINV":
+                        if (!string.IsNullOrEmpty(par))
+                            style.MarginVertical = int.Parse(par, NumberStyles.Any, CultureInfo.InvariantCulture);
+                        break;
+                    case "ALPHALEVEL":
+                        if (!string.IsNullOrEmpty(par))
+                            style.AlphaLevel = float.Parse(par, NumberStyles.Any, CultureInfo.InvariantCulture);
+                        break;
+                    case "ENCODING":
+                        if (!string.IsNullOrEmpty(par))
+                            style.Encoding = int.Parse(par, NumberStyles.Any, CultureInfo.InvariantCulture);
+                        break;
+                }
+            }
+            
             return style;
         }
 
@@ -165,21 +190,21 @@ namespace Sushi.Net.Library.Events.Subtitles.Aegis
                         break;
                     case "PRIMARYCOLOUR":
                     case "PRIMARYCOLOR":
-                        bld.Append(style.PrimaryColor);
+                        bld.Append(string.IsNullOrEmpty(style.PrimaryColor) ? "" : style.PrimaryColor);
                         break;
                     case "SECONDARYCOLOUR":
                     case "SECONDARYCOLOR":
-                        bld.Append(style.SecondaryColor);
+                        bld.Append(string.IsNullOrEmpty(style.SecondaryColor) ? "" : style.SecondaryColor);
                         break;
                     case "TERTIARYCOLOUR":
                     case "TERTIARYCOLOR":
                     case "OUTLINECOLOUR":
                     case "OUTLINECOLOR":
-                        bld.Append(style.OutlineColor);
+                        bld.Append(string.IsNullOrEmpty(style.OutlineColor) ? "" : style.OutlineColor);
                         break;
                     case "BACKCOLOUR":
                     case "BACKCOLOR":
-                        bld.Append(style.BackColor);
+                        bld.Append(string.IsNullOrEmpty(style.BackColor) ? "" : style.BackColor);
                         break;
                     case "BOLD":
                         bld.Append(style.Bold ? "-1" : "0");
@@ -215,7 +240,9 @@ namespace Sushi.Net.Library.Events.Subtitles.Aegis
                         bld.Append(style.Alignment.ToString(CultureInfo.InvariantCulture));
                         break;
                     case "SPACING":
-                        bld.Append(style.Spacing.ToString(CultureInfo.InvariantCulture));
+                        // Don't output spacing if it's the default value of 0
+                        if (style.Spacing != 0)
+                            bld.Append(style.Spacing.ToString(CultureInfo.InvariantCulture));
                         break;
                     case "MARGINL":
                         bld.Append(style.MarginLeft.ToString());
