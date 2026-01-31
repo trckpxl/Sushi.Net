@@ -22,7 +22,7 @@ jobs:
       run: dotnet restore Sushi.Net/Sushi.Net.csproj
 
     - name: Publish
-      run: dotnet publish Sushi.Net/Sushi.Net.csproj -c Release -r win-x64 --self-contained -p:PublishSingleFile=true -o ./publish
+      run: dotnet publish Sushi.Net/Sushi.Net.csproj -c Release -r win-x64 --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true -p:EnableCompressionInSingleFileBundle=true -o ./publish
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
