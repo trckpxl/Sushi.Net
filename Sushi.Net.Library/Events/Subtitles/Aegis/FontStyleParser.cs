@@ -218,13 +218,13 @@ namespace Sushi.Net.Library.Events.Subtitles.Aegis
                         bld.Append(style.Spacing.ToString(CultureInfo.InvariantCulture));
                         break;
                     case "MARGINL":
-                        bld.Append(style.MarginLeft.ToString("D4"));
+                        bld.Append(style.MarginLeft.ToString());
                         break;
                     case "MARGINR":
-                        bld.Append(style.MarginRight.ToString("D4"));
+                        bld.Append(style.MarginRight.ToString());
                         break;
                     case "MARGINV":
-                        bld.Append(style.MarginVertical.ToString("D4"));
+                        bld.Append(style.MarginVertical.ToString());
                         break;
                     case "ALPHALEVEL":
                         bld.Append(style.AlphaLevel.ToString(CultureInfo.InvariantCulture));
