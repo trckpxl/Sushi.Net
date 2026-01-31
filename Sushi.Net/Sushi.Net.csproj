@@ -19,6 +19,7 @@ Or it can shift in chunks a foreign/original audio stream to match another forei
     <Copyright>Copyright © 2023 Máximo Piva</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Version>1.0.2</Version>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

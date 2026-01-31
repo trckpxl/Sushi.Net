@@ -40,11 +40,10 @@ namespace Sushi.Net
             _lcfg = new SushiLoggingConfiguration();
             Console.CancelKeyPress += (s, e) =>
             {
-                Console.WriteLine("\nSIGINT received, exiting program...");
+                Console.WriteLine("\nSIGINT received, requesting cancellation...");
                 _lcfg.SetLevel(LogLevel.None);
                 _globalCancellation.Source.Cancel();
-                Thread.Sleep(200);
-                Environment.Exit(1);
+                e.Cancel = true;
             };
 
             return BuildCommandLine().
