@@ -51,7 +51,7 @@ namespace Sushi.Net.Library.Settings
         [CommandLine("--kf-mode", KFMode.All, "Keyframes-based shift correction/snapping mode. [Only for subtitle Algo]", "All, Shift, Snap")]
         public KFMode KfMode { get; set; }
 
-        [CommandLine("--resize-subtitles", true, "Resize subtitles to target video, when it exist.")]
+        [CommandLine("--resize-subtitles", false, "Resize subtitles to target video, when it exist.")]
         public bool ResizeSubtitles { get; set; }
         [CommandLine("--subtitles-dimensions", null, "Destination subtitles dimensions when video doesn't exists, or you want custom dimensions.","WidthxHeight")]
         public string SubtitleDimensions { get; set; }
