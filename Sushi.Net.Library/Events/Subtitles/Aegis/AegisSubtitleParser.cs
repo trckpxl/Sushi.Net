@@ -122,13 +122,13 @@ namespace Sushi.Net.Library.Events.Subtitles.Aegis
                         bld.Append(sub.Actor);
                         break;
                     case "MARGINL":
-                        bld.Append(sub.MarginLeft.ToString("D4"));
+                        bld.Append(sub.MarginLeft.ToString());
                         break;
                     case "MARGINR":
-                        bld.Append(sub.MarginRight.ToString("D4"));
+                        bld.Append(sub.MarginRight.ToString());
                         break;
                     case "MARGINV":
-                        bld.Append(sub.MarginVertical.ToString("D4"));
+                        bld.Append(sub.MarginVertical.ToString());
                         break;
                     case "EFFECT":
                         bld.Append(sub.Effect);
